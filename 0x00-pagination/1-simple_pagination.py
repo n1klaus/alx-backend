@@ -27,7 +27,6 @@ class Server:
     def __init__(self):
         self.__dataset = None
 
-    @property
     def dataset(self) -> List[List]:
         """
         Cached dataset
@@ -53,6 +52,7 @@ class Server:
 
         return_page: list = []
         start_index, end_index = index_range(page, page_size)
-        if self.dataset and len(self.dataset) > end_index:
-            return_page = self.dataset[start_index: end_index]
+        dataset: list = self.dataset()
+        if dataset and len(dataset) > end_index:
+            return_page = dataset[start_index: end_index]
         return return_page
