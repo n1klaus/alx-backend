@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+"""Seek pagination with data dictionary"""
+
 import csv
 import math
 from typing import Any, Dict, List, Tuple
