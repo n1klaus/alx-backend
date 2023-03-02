@@ -14,16 +14,16 @@ class Config(object):
     TIMEZONE = "UTC"
 
 
-app.config = Config()
+config = Config()
 
 
 @babel.localeselector
 def get_locale():
     """Returns best matching locale according to language weights"""
-    return request.accept_languages.best_match(app.config.get("LANGUAGES"))
+    return request.accept_languages.best_match(config.LANGUAGES)
 
 
 @babel.timezoneselector
 def get_timezone():
     """Sets the timezone for the app"""
-    return app.config.get("TIMEZONE")
+    return config.TIMEZONE

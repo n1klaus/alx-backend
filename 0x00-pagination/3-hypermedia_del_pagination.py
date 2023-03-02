@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Deletion-resilient hypermedia pagination
+Deletion-resilient hypermedia seek pagination
 """
 
 import csv
 import math
-from typing import Dict, List, Tuple
+from typing import Any, Dict, List
 
 
 class Server:
@@ -42,7 +42,7 @@ class Server:
             }
         return self.__indexed_dataset
 
-    def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict:
+    def get_hyper_index(self, index: int = None, page_size: int = 10) -> Dict[str, Any]:
         """
         Args:
             index (int): the index of the first item in the current page
@@ -51,12 +51,26 @@ class Server:
             the appropriate page information
         """
         assert isinstance(index and page_size, int)
-        dataset: dict = self.indexed_dataset()
-        assert index >= 0 and index < len(dataset) and page_size > 0
+        dataset: dict = self.dataset()
+        indexed_dataset: dict = self.indexed_dataset()
+        assert 0 <= index < len(indexed_dataset) and page_size > 0
+
+        
+        PAGE_FIX: bool = False
+        for i in range (index, len(indexed_dataset.keys())):
+            if i not in indexed_dataset.keys() or PAGE_FIX:
+                next_data_index: int = i + 1
+                while True:
+                    data: Any = indexed_dataset.get(next_data_index)
+                    if data is not None:
+                        break
+                    next_data_index += 1
+                indexed_dataset[index] = data
+                PAGE_FIX = True
 
         next_index: int = index + page_size
         data: List[str] = [
-            d for d in list(dataset.values())[index: next_index]
+            d for d in list(indexed_dataset.values())[index: next_index]
         ]
 
         return {

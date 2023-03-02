@@ -14,6 +14,6 @@ class Config(object):
     TIMEZONE = "UTC"
 
 
-app.config = Config()
-babel.default_locale = app.config.LANGUAGES[0]
-babel.default_timezone = app.config.TIMEZONE
+config = Config()
+babel.default_locale = config.LANGUAGES[0]
+babel.default_timezone = config.TIMEZONE
