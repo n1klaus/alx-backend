@@ -1,41 +1,33 @@
 #!/usr/bin/env python3
 """Flask with babel"""
 
-from flask import request, Flask, render_template
-from flask_babel import Babel, _
-
-app = Flask(__name__)
-
-babel = Babel(app=app)
+from flask_babel import Babel
+from flask import Flask, render_template, request
 
 
 class Config(object):
     """Configuration for babel"""
     LANGUAGES = ["en", "fr"]
-    TIMEZONE = "UTC"
+
+    BABEL_DEFAULT_LOCALE = LANGUAGES[0]
+    BABEL_DEFAULT_TIMEZONE = "UTC"
 
 
-config = Config()
+app = Flask(__name__)
+app.config.from_object(Config)
+babel = Babel(app=app)
 
 
 @babel.localeselector
 def get_locale():
     """Returns best matching locale according to language weights"""
-    return request.accept_languages.best_match(config.LANGUAGES)
-
-
-@babel.timezoneselector
-def get_timezone():
-    """Sets the timezone for the app"""
-    return config.TIMEZONE
+    return request.accept_languages.best_match(app.config["LANGUAGES"])
 
 
 @app.route("/", strict_slashes=False)
-def home():
-    """Home page"""
-    return render_template("3-index.html",
-                           home_title=_("Welcome to Holberton"),
-                           home_header=_("Hello world"))
+def root():
+    """Root page"""
+    return render_template("3-index.html")
 
 
 if __name__ == "__main__":

@@ -8,7 +8,9 @@ from flask import Flask, render_template, request
 class Config(object):
     """Configuration for babel"""
     LANGUAGES = ["en", "fr"]
-    TIMEZONE = "UTC"
+
+    BABEL_DEFAULT_LOCALE = LANGUAGES[0]
+    BABEL_DEFAULT_TIMEZONE = "UTC"
 
 
 app = Flask(__name__)
@@ -20,12 +22,6 @@ babel = Babel(app=app)
 def get_locale():
     """Returns best matching locale according to language weights"""
     return request.accept_languages.best_match(app.config["LANGUAGES"])
-
-
-@babel.timezoneselector
-def get_timezone():
-    """Sets the timezone for the app"""
-    return app.config["TIMEZONE"]
 
 
 @app.route("/", strict_slashes=False)
