@@ -11,7 +11,7 @@ class Config(object):
     TIMEZONE = "UTC"
 
     default_locale = LANGUAGES[0]
-    default_timezon = TIMEZONE
+    default_timezone = TIMEZONE
 
 
 app = Flask(__name__)
