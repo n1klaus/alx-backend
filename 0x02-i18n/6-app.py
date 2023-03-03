@@ -28,11 +28,26 @@ babel = Babel(app=app)
 
 @babel.localeselector
 def get_locale():
-    """Returns best matching locale according to language weights"""
-    locale: str = request.args.get("locale")
-    if locale in app.config["LANGUAGES"]:
+    """
+    Returns best matching locale according to language weights
+    or user locale if present in user preferences
+    """
+    # Locale from URL parameters
+    if request.args.get("locale"):
+        locale: str = request.args.get("locale")
+        if locale in app.config["LANGUAGES"]:
+            return locale
+    # Locale from user settings
+    if g.user:
+        locale: str = g.user.locale
         return locale
-    return request.accept_languages.best_match(app.config["LANGUAGES"])
+    # Locale from request header
+    if len(request.accept_languages) > 1 \
+            or babel.default_locale not in request.accept_languages:
+        return request.accept_languages.best_match(app.config["LANGUAGES"])
+    # Default locale
+    else:
+        return babel.default_locale
 
 
 @app.before_request
@@ -58,7 +73,7 @@ def get_user():
 @app.route("/", strict_slashes=False)
 def root():
     """Root page"""
-    return render_template("5-index.html")
+    return render_template("6-index.html")
 
 
 if __name__ == "__main__":
