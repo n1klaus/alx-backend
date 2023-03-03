@@ -7,8 +7,8 @@ from flask import Flask, render_template
 
 class Config(object):
     """Configuration for babel"""
-    LANGUAGES = ["en", "fr"]
-    TIMEZONE = "UTC"
+    default_locale = "en"
+    default_timezone = "UTC"
 
 
 app = Flask(__name__)
@@ -16,11 +16,10 @@ app = Flask(__name__)
 app.config.from_object(Config)
 babel = Babel(app=app)
 
-
 @app.route("/", strict_slashes=False)
 def root():
     """Root page"""
-    return render_template("0-index.html")
+    return render_template("1-index.html")
 
 
 if __name__ == "__main__":
