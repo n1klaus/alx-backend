@@ -2,10 +2,7 @@
 """Basic babel setup"""
 
 from flask_babel import Babel
-from flask import request
-app = __import__("0-app").app
-
-babel = Babel(app=app)
+from flask import Flask, render_template
 
 
 class Config(object):
@@ -14,6 +11,19 @@ class Config(object):
     TIMEZONE = "UTC"
 
 
-config = Config()
-babel.default_locale = config.LANGUAGES[0]
-babel.default_timezone = config.TIMEZONE
+app = Flask(__name__)
+
+app.config.from_object(Config)
+babel = Babel(app=app)
+
+
+@app.route("/", strict_slashes=False)
+def root():
+    """Root page"""
+    return render_template("0-index.html")
+
+
+if __name__ == "__main__":
+    HOST = "0.0.0.0"
+    PORT = 5000
+    app.run(host=HOST, port=PORT)
