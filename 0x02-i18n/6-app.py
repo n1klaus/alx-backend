@@ -50,6 +50,25 @@ def get_locale():
         return babel.default_locale
 
 
+@babel.timezoneselector
+def get_timezone():
+    """
+    Returns best matching timezone according to language weights
+    or user locale if present in user preferences
+    """
+    # Locale from URL parameters
+    if request.args.get("timezone"):
+        timezone: str = request.args.get("timezone")
+        return timezone
+    # Locale from user settings
+    if g.user:
+        timezone: str = g.user.timezone
+        return timezone
+    # Default locale
+    else:
+        return babel.default_timezone
+
+
 @app.before_request
 def before_request():
     """Adds the user dictionary to globals if user is available"""
